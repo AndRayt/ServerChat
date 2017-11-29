@@ -14,6 +14,7 @@ namespace ServerChat
         TcpListener tcpListener;
         List<Client> clients = new List<Client>();
 
+        
         int PORT;
 
         public Server (int PORT)
@@ -26,14 +27,9 @@ namespace ServerChat
             clients.Add(client);
         }
 
-        public void deleteConnect (string id)
+        public void deleteConnect (Client cl)
         {
-            foreach (Client cl in clients) {
-                if (id.Equals(cl.Id))
-                {
-                    clients.Remove(cl);
-                }
-            }
+            if (cl != null) clients.Remove(cl);
         }
 
         public void listen()
@@ -41,11 +37,13 @@ namespace ServerChat
             tcpListener = new TcpListener(IPAddress.Any, PORT);
             tcpListener.Start();
             Console.WriteLine("--- Server is started. Wait connections ---");
+
             Thread listenThread = new Thread(new ThreadStart(listenProcess));
             listenThread.Start();
+            listenThread.IsBackground = true;
+
             Console.WriteLine("___ Press any button to stop the server ___");
             Console.ReadLine();
-
             //завершение работы
             tcpListener.Stop();
             foreach (Client cl in clients)

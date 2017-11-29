@@ -15,14 +15,13 @@ namespace ServerChat
             get;
             private set;
         }
-
         public NetworkStream Stream
         {
             get;
             private set;
         }
-
         public string userName;
+
         TcpClient client;
         Server server;
 
@@ -50,19 +49,20 @@ namespace ServerChat
                 Console.WriteLine(msg);
 
                 //Просматриваем все остальные сообщения
-                while (client.Connected)
+                while (true)
                 {
                     msg = getMessage();
+                    if (msg.Equals("")) continue;
                     msg = userName + ": " + msg;
                     Console.WriteLine(msg);
                     server.castMsg(msg, Id);
                 }
-                msg = userName + " disconnected";
             } catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                //Console.WriteLine(e.Message);
             } finally
             {
+                server.deleteConnect(this);
                 close();
             }
         }
