@@ -14,6 +14,8 @@ namespace ServerChat
         TcpListener tcpListener;
         List<Client> clients = new List<Client>();
 
+        //список всех сообщений
+        StringBuilder msgList = new StringBuilder("");
         
         int PORT;
 
@@ -53,12 +55,25 @@ namespace ServerChat
             Environment.Exit(0);
         }
 
-        public void castMsg(string msg, string id)
+        public void castMsg(string msg)
         {
+            //добавляем сообщение в список
+            msgList.Append(msg);
+            msgList.Append("\n");
+            //делаем широковещательную рассылку
             byte[] data = Encoding.Unicode.GetBytes(msg);
             foreach (Client cl in clients)
             {
                 cl.Stream.Write(data, 0, data.Length);
+            }
+        }
+
+        public void getHistory(string id)
+        {
+            byte[] data = Encoding.Unicode.GetBytes(msgList.ToString());
+            foreach (Client cl in clients)
+            {
+                if (cl.Id.Equals(id)) cl.Stream.Write(data, 0, data.Length);
             }
         }
 

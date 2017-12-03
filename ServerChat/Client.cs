@@ -42,8 +42,11 @@ namespace ServerChat
                 //на сервер - это имя пользователя
                 userName = getMessage();
 
+                //выводим предыдущие сообщения
+                server.getHistory(Id);
+
                 msg = userName + " connected";
-                server.castMsg(msg, Id);
+                server.castMsg(msg);
 
                 msg = msg + " ID: " + Id;
                 Console.WriteLine(msg);
@@ -55,7 +58,7 @@ namespace ServerChat
                     if (msg.Equals("")) continue;
                     msg = userName + ": " + msg;
                     Console.WriteLine(msg);
-                    server.castMsg(msg, Id);
+                    server.castMsg(msg);
                 }
             } catch (Exception e)
             {
