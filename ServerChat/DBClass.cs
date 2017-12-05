@@ -21,7 +21,7 @@ namespace ServerChat
             connection.Close();
         }
 
-        public string getAllMessage()
+        public string GetAllMessage()
         {
             StringBuilder result = new StringBuilder("");
             using (connection)
@@ -40,7 +40,7 @@ namespace ServerChat
             return result.ToString();
         }
 
-        public bool getNameDB(string name)
+        public bool GetNameDB(string name)
         {
             string sql = "SELECT name FROM person WHERE name = \"" + name + "\"";
             MySqlCommand command = new MySqlCommand(sql, connection);
@@ -55,7 +55,7 @@ namespace ServerChat
             }
         }
 
-        public void addMessage(string name, string text)
+        public void AddMessage(string name, string text)
         {
             using (connection)
             {

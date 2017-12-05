@@ -32,7 +32,7 @@ namespace ServerChat
             this.server = server;
         }
 
-        public void start()
+        public void Start()
         {
             try
             {
@@ -40,13 +40,13 @@ namespace ServerChat
                 String msg = "";
                 //По соглашению первое сообщение отправленное 
                 //на сервер - это имя пользователя
-                userName = getMessage();
+                userName = GetMessage();
 
                 //выводим предыдущие сообщения
-                server.getHistory(Id);
+                server.GetHistory(Id);
                 
                 msg = "connected";
-                server.castMsg(userName, msg, false);
+                server.CastMsg(userName, msg, false);
 
                 msg = String.Format("{0} {1} || ID: {2}",userName, msg, Id);
                 Console.WriteLine(msg);
@@ -54,9 +54,9 @@ namespace ServerChat
                 //Просматриваем все остальные сообщения
                 while (true)
                 {
-                    msg = getMessage();
+                    msg = GetMessage();
                     if (msg.Equals("")) continue;
-                    server.castMsg(userName, msg, true);
+                    server.CastMsg(userName, msg, true);
                     msg = String.Format("{0}: {1}", userName, msg);
                     Console.WriteLine(msg);
                 }
@@ -65,18 +65,18 @@ namespace ServerChat
                 //Console.WriteLine(e.Message);
             } finally
             {
-                server.deleteConnect(this);
-                close();
+                server.DeleteConnect(this);
+                Close();
             }
         }
 
-        public void close()
+        public void Close()
         {
             if (Stream != null) Stream.Close();
             if (client != null) client.Close();
         }
 
-        private string getMessage()
+        private string GetMessage()
         {
             byte[] msgBytes = new byte[128];
             StringBuilder msg = new StringBuilder();

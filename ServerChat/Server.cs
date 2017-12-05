@@ -27,23 +27,23 @@ namespace ServerChat
             this.PORT = PORT;
         }
 
-        public void addConnect(Client client)
+        public void AddConnect(Client client)
         {
             clients.Add(client);
         }
 
-        public void deleteConnect (Client cl)
+        public void DeleteConnect (Client cl)
         {
             if (cl != null) clients.Remove(cl);
         }
 
-        public void listen()
+        public void Listen()
         {
             tcpListener = new TcpListener(IPAddress.Any, PORT);
             tcpListener.Start();
             Console.WriteLine("--- Server is started. Wait connections ---");
 
-            Thread listenThread = new Thread(new ThreadStart(listenProcess));
+            Thread listenThread = new Thread(new ThreadStart(ListenProcess));
             listenThread.Start();
             listenThread.IsBackground = true;
 
@@ -53,17 +53,17 @@ namespace ServerChat
             tcpListener.Stop();
             foreach (Client cl in clients)
             {
-                cl.close();
+                cl.Close();
             }
             Environment.Exit(0);
         }
 
-        public void castMsg(string name, string msg, bool addToDB)
+        public void CastMsg(string name, string msg, bool addToDB)
         {
             //добавляем сообщение в список
             //msgList.Append(msg);
             //msgList.Append("\n");
-            if (addToDB) dbMsg.addMessage(name, msg);
+            if (addToDB) dbMsg.AddMessage(name, msg);
             //делаем широковещательную рассылку
             byte[] data = Encoding.Unicode.GetBytes(String.Format("{0}: {1}", name, msg));
             foreach (Client cl in clients)
@@ -72,21 +72,21 @@ namespace ServerChat
             }
         }
 
-        public void getHistory(string id)
+        public void GetHistory(string id)
         {
             /*byte[] data = Encoding.Unicode.GetBytes(msgList.ToString());
             foreach (Client cl in clients)
             {
                 if (cl.Id.Equals(id)) cl.Stream.Write(data, 0, data.Length);
             }*/
-            byte[] data = Encoding.Unicode.GetBytes(dbMsg.getAllMessage());
+            byte[] data = Encoding.Unicode.GetBytes(dbMsg.GetAllMessage());
             foreach (Client cl in clients)
             {
                 if (cl.Id.Equals(id)) cl.Stream.Write(data, 0, data.Length);
             }
         }
 
-        private void listenProcess()
+        private void ListenProcess()
         {
             while (true)
             {
@@ -94,7 +94,7 @@ namespace ServerChat
 
                 Client client = new Client(tcpClient, this);
                 clients.Add(client);
-                Thread clientThread = new Thread(new ThreadStart(client.start));
+                Thread clientThread = new Thread(new ThreadStart(client.Start));
                 clientThread.Start();
             }
         }

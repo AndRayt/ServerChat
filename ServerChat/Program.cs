@@ -19,7 +19,7 @@ namespace ServerChat
             {
                 Server server = new Server(PORT);
                 //запускаем сервер
-                server.listen();
+                server.Listen();
             } catch (Exception e)
             {
                 Console.WriteLine(e.Message);
