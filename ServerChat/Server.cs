@@ -64,8 +64,18 @@ namespace ServerChat
             //msgList.Append(msg);
             //msgList.Append("\n");
             if (addToDB) dbMsg.AddMessage(name, msg);
+            else msg += "#";
             //делаем широковещательную рассылку
             byte[] data = Encoding.Unicode.GetBytes(String.Format("{0}: {1}", name, msg));
+            foreach (Client cl in clients)
+            {
+                cl.Stream.Write(data, 0, data.Length);
+            }
+        }
+
+        public void CastMsg(string msg)
+        {
+            byte[] data = Encoding.Unicode.GetBytes(msg);
             foreach (Client cl in clients)
             {
                 cl.Stream.Write(data, 0, data.Length);
@@ -84,6 +94,18 @@ namespace ServerChat
             {
                 if (cl.Id.Equals(id)) cl.Stream.Write(data, 0, data.Length);
             }
+        }
+
+        public string GetUserOnline()
+        {
+            StringBuilder str = new StringBuilder();
+            str.Append("#");
+            foreach (Client cl in clients)
+            {
+                str.Append(cl.userName);
+                str.Append("\n");
+            }
+            return str.ToString();
         }
 
         private void ListenProcess()

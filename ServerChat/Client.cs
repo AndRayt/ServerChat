@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ServerChat
@@ -42,6 +43,10 @@ namespace ServerChat
                 //на сервер - это имя пользователя
                 userName = GetMessage();
 
+                //Выводим список пользователей
+                server.CastMsg(server.GetUserOnline());
+                Thread.Sleep(100);
+
                 //выводим предыдущие сообщения
                 server.GetHistory(Id);
                 
@@ -66,6 +71,7 @@ namespace ServerChat
             } finally
             {
                 server.DeleteConnect(this);
+                server.CastMsg(server.GetUserOnline());
                 Close();
             }
         }
