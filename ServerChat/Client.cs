@@ -44,11 +44,11 @@ namespace ServerChat
 
                 //выводим предыдущие сообщения
                 server.getHistory(Id);
+                
+                msg = "connected";
+                server.castMsg(userName, msg, false);
 
-                msg = userName + " connected";
-                server.castMsg(msg);
-
-                msg = msg + " ID: " + Id;
+                msg = String.Format("{0} {1} || ID: {2}",userName, msg, Id);
                 Console.WriteLine(msg);
 
                 //Просматриваем все остальные сообщения
@@ -56,9 +56,9 @@ namespace ServerChat
                 {
                     msg = getMessage();
                     if (msg.Equals("")) continue;
-                    msg = userName + ": " + msg;
+                    server.castMsg(userName, msg, true);
+                    msg = String.Format("{0}: {1}", userName, msg);
                     Console.WriteLine(msg);
-                    server.castMsg(msg);
                 }
             } catch (Exception e)
             {

@@ -16,7 +16,10 @@ namespace ServerChat
 
         //список всех сообщений
         StringBuilder msgList = new StringBuilder("");
-        
+
+        //База данных с сообщениями
+        DBClass dbMsg = new DBClass();
+
         int PORT;
 
         public Server (int PORT)
@@ -55,13 +58,14 @@ namespace ServerChat
             Environment.Exit(0);
         }
 
-        public void castMsg(string msg)
+        public void castMsg(string name, string msg, bool addToDB)
         {
             //добавляем сообщение в список
-            msgList.Append(msg);
-            msgList.Append("\n");
+            //msgList.Append(msg);
+            //msgList.Append("\n");
+            if (addToDB) dbMsg.addMessage(name, msg);
             //делаем широковещательную рассылку
-            byte[] data = Encoding.Unicode.GetBytes(msg);
+            byte[] data = Encoding.Unicode.GetBytes(String.Format("{0}: {1}", name, msg));
             foreach (Client cl in clients)
             {
                 cl.Stream.Write(data, 0, data.Length);
@@ -70,7 +74,12 @@ namespace ServerChat
 
         public void getHistory(string id)
         {
-            byte[] data = Encoding.Unicode.GetBytes(msgList.ToString());
+            /*byte[] data = Encoding.Unicode.GetBytes(msgList.ToString());
+            foreach (Client cl in clients)
+            {
+                if (cl.Id.Equals(id)) cl.Stream.Write(data, 0, data.Length);
+            }*/
+            byte[] data = Encoding.Unicode.GetBytes(dbMsg.getAllMessage());
             foreach (Client cl in clients)
             {
                 if (cl.Id.Equals(id)) cl.Stream.Write(data, 0, data.Length);
