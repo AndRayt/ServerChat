@@ -12,7 +12,7 @@ namespace ServerChat
 
         public DBClass()
         {
-            connstr = "server=localhost;user=root;database=chat;password=Elenalove1998";
+            connstr = "server=localhost;user=root;database=chat;password=admin";
             connection = new MySqlConnection(connstr);
         }
 
